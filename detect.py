@@ -5,7 +5,7 @@ from yolo import YOLO
 
 
 def detectImage():
-    yolo = YOLO(configPath="yolov4-tiny.cfg", weightPath="yolov4-tiny_final.weights", classPath="data/obj.names")
+    yolo = YOLO(configPath="yolo4/yolov4-tiny.cfg", weightPath="yolo4/yolov4-tiny_final.weights", classPath="yolo4/obj.names")
     while True:
         path = input("Input filename:")
         if path == "exit":

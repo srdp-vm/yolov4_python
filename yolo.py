@@ -68,7 +68,6 @@ class YOLO:
         thickness -= thickness % 2  # 保证为偶数
         for detection in detections:
             pred_class, score, box = detection
-            pred_class = pred_class.decode("utf-8")
 
             top, bottom, left, right = self.convertBox(box, image.shape)
             top = max(0, top)
@@ -76,7 +75,7 @@ class YOLO:
             bottom = min(bottom, image.shape[0])
             right = min(right, image.shape[1])
 
-            label = "{} {:.2f}".format(pred_class, score)
+            label = "{} {}".format(pred_class, score)
             print(label, (left, top), (right, bottom))
 
             # 在图片中标注检测项目
