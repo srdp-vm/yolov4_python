@@ -7,16 +7,13 @@ import time
 
 class YOLO:
     def __init__(self, configPath = "", weightPath = "",
-                 metaPath = "", classPath = ""):
+                 classPath = ""):
         if not os.path.exists(configPath):
             raise ValueError("Invalid config path `" +
                              os.path.abspath(configPath) + "`")
         if not os.path.exists(weightPath):
             raise ValueError("Invalid weight path `" +
                              os.path.abspath(weightPath) + "`")
-        if not os.path.exists(metaPath):
-            raise ValueError("Invalid data file path `" +
-                             os.path.abspath(metaPath) + "`")
         if not os.path.exists(classPath):
             raise ValueError("Invalid classes file path `" +
                              os.path.abspath(classPath) + "`")

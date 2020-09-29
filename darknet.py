@@ -46,6 +46,7 @@ class DETECTION(Structure):
                 ("sim", c_float),
                 ("track_id", c_int)]
 
+
 class DETNUMPAIR(Structure):
     _fields_ = [("num", c_int),
                 ("dets", POINTER(DETECTION))]
@@ -168,7 +169,8 @@ if os.name == "nt":
         else:
             # Try the other way, in case no_gpu was compile but not renamed
             lib = CDLL(winGPUdll, RTLD_GLOBAL)
-            print("Environment variables indicated a CPU run, but we didn't find {}. Trying a GPU run anyway.".format(winNoGPUdll))
+            print("Environment variables indicated a CPU run, but we didn't find {}. Trying a GPU run anyway.".format(
+                winNoGPUdll))
 else:
     lib = CDLL(os.path.join(
         os.environ.get('DARKNET_PATH', './'),
@@ -179,7 +181,7 @@ lib.network_height.argtypes = [c_void_p]
 lib.network_height.restype = c_int
 
 copy_image_from_bytes = lib.copy_image_from_bytes
-copy_image_from_bytes.argtypes = [IMAGE,c_char_p]
+copy_image_from_bytes.argtypes = [IMAGE, c_char_p]
 
 predict = lib.network_predict_ptr
 predict.argtypes = [c_void_p, POINTER(c_float)]
@@ -264,5 +266,5 @@ predict_image_letterbox.restype = POINTER(c_float)
 
 network_predict_batch = lib.network_predict_batch
 network_predict_batch.argtypes = [c_void_p, IMAGE, c_int, c_int, c_int,
-                                   c_float, c_float, POINTER(c_int), c_int, c_int]
+                                  c_float, c_float, POINTER(c_int), c_int, c_int]
 network_predict_batch.restype = POINTER(DETNUMPAIR)
