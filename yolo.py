@@ -5,7 +5,7 @@ import os
 import colorsys
 import time
 
-class YOLO():
+class YOLO:
     def __init__(self, configPath = "", weightPath = "",
                  metaPath = "", classPath = ""):
         if not os.path.exists(configPath):
@@ -21,11 +21,13 @@ class YOLO():
             raise ValueError("Invalid classes file path `" +
                              os.path.abspath(classPath) + "`")
         self.net = dk.load_net_custom(configPath.encode("ascii"), weightPath.encode("ascii"), 0, 1)
-        self.meta = dk.load_meta(metaPath.encode("ascii"))
         self.class_names = YOLO.getClass(classPath)
         self.darknet_image = dk.make_image(dk.network_width(self.net), dk.network_height(self.net), 3)
         self.thresh = 0.5
         self.colors = self.getColors()
+
+    def __del__(self):
+        dk.free_image(self.darknet_image)
 
 
     @staticmethod
@@ -129,7 +131,7 @@ class YOLO():
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         resized = YOLO.letterbox_image(image_rgb, (dk.network_width(self.net), dk.network_height(self.net)))
         dk.copy_image_from_bytes(self.darknet_image, resized.tobytes())
-        detections = dk.detect_image(self.net, self.meta, self.darknet_image, self.thresh)
+        detections = dk.detect_image(self.net, self.class_names, self.darknet_image, self.thresh)
         image = self.drawBox(detections, image, showLabel)
         end = time.time()
         print("Time cost:{}s".format(end - begin))
@@ -144,7 +146,7 @@ class YOLO():
         img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         img_resized = YOLO.letterbox_image(img_rgb, (dk.network_width(self.net), dk.network_height(self.net)))
         dk.copy_image_from_bytes(self.darknet_image, img_resized.tobytes())
-        detections = dk.detect_image(self.net, self.meta, self.darknet_image, self.thresh)
+        detections = dk.detect_image(self.net, self.class_names, self.darknet_image, self.thresh)
         for detection in detections:
             pred_class, score, box = detection
             pred_class = pred_class.decode("utf-8")
