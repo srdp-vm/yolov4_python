@@ -146,5 +146,5 @@ class YOLO:
         for detection in detections:
             pred_class, score, box = detection
             count = items_count.get(pred_class, 0)
-            items_count[pred_class] = count
+            items_count[pred_class] = count + 1
         return items_count
